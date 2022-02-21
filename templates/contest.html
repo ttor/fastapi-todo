@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block style %}
+  <style>
+    li.htmx-swapping {
+      opacity: 0;
+      transition: opacity 1s ease-out;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <div class="uk-card uk-card-default uk-card-body uk-width-1-2@m uk-margin-top">
+    <img data-src="{{ contest.image_url }}" width="1800" height="1200" alt="" uk-img>
+
+  </div>
+{% endblock %}
+
+{% block javascript %}
+  <script>
+    htmx.on('htmx:afterSwap', function(event) {
+      document.getElementById("contentInput").value = ""
+    });
+  </script>
+{% endblock %}

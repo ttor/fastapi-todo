@@ -1,6 +1,8 @@
 from sqlalchemy import Column
 from sqlalchemy import Integer
 from sqlalchemy import String
+from sqlalchemy import DateTime
+from sqlalchemy import Boolean
 from sqlalchemy.orm import Session
 
 from database import Base
@@ -43,3 +45,27 @@ def delete_todo(db: Session, item_id: int):
     db.delete(todo)
     db.commit()
 
+
+class Contest(Base):
+    __tablename__ = "contests"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String)
+    description = Column(String)
+    image_url = Column(String)
+    is_active = Column(Boolean)
+    #end_datetime = Column(DateTime)
+
+
+def create_contest(db: Session, name: str, description: str, image_url: str, is_active: bool):
+    contest = Contest(name=content, description=session_key, image_url=image_url, is_active=is_active)
+    db.add(contest)
+    db.commit()
+    db.refresh(contest)
+    return contest
+
+def get_contest(db: Session, contest_id: int):
+    return db.query(Contest).filter(Contest.id == contest_id).first()
+
+def get_todos(db: Session, session_key: str, skip: int = 0, limit: int = 100):
+    return db.query(ToDo).filter(ToDo.session_key == session_key).offset(skip).limit(limit).all()

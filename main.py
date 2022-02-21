@@ -18,6 +18,7 @@ from models import delete_todo
 from models import get_todo
 from models import get_todos
 from models import update_todo
+from models import get_contest
 
 Base.metadata.create_all(bind=engine)
 
@@ -72,3 +73,17 @@ def put_edit(request: Request, item_id: int, content: str = Form(...), db: Sessi
 @app.delete("/delete/{item_id}", response_class=Response)
 def delete(item_id: int, db: Session = Depends(get_db)):
     delete_todo(db, item_id)
+
+
+@app.get("/contests/{contest_id}", response_class=HTMLResponse)
+def home(request: Request, contest_id:int, db: Session = Depends(get_db)):
+    #session_key = request.cookies.get("session_key", uuid.uuid4().hex)
+    contest = get_contest(db, contest_id)
+    context = {
+        "request": request,
+        "contest": contest,
+        "title": "Home"
+    }
+    response = templates.TemplateResponse("contest.html", context)
+    #response.set_cookie(key="session_key", value=session_key, expires=259200)  # 3 days
+    return response
